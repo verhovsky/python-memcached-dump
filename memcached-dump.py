@@ -68,9 +68,9 @@ if __name__ == '__main__':
 		with dump(**hostPort) as dumpInst:
 			data = dumpInst
 	except:
-		print >>sys.stderr,'can\'t dump data from %s:%s' %(args.host,args.port)
+		print('can\'t dump data from %s:%s' %(args.host,args.port), file=sys.stderr)
 	try:	
 		with open(args.path,'w') as fp:
 			json.dump(data,fp)
 	except:
-		print >>sys.stderr,'can\'t open or write file %s' % args.path
+		print('can\'t open or write file %s' % args.path, file=sys.stderr)
