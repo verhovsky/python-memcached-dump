@@ -1,11 +1,10 @@
 #!/usr/bin/env python
-#coding=utf-8
 
 import socket,re
 import sys,argparse
 import json
 
-class dump(object):
+class dump:
 
 	def __init__(self,**kwargs):
 		socket.setdefaulttimeout(10)
@@ -37,7 +36,7 @@ class dump(object):
 		return ''.join(result)
 	
 	def __unpackItems(self,data):
-		items = re.findall('STAT items:(\d+):number (\d+)',data)
+		items = re.findall(r'STAT items:(\d+):number (\d+)',data)
 		return items
 
 	def __unpackKeys(self,data):
@@ -45,7 +44,7 @@ class dump(object):
 		for item in data:
 			cmd = "stats cachedump "+item[0]+" "+item[1]+'\n'
 			keyStr = self.__sendCmd(cmd)
-			key = re.findall('ITEM ([^\s]+) \[(\d+) b',keyStr)
+			key = re.findall(r'ITEM ([^\s]+) \[(\d+) b',keyStr)
 			for k in key:
 				if int(k[1]) != 0:
 	 				keys.append((k[0],k[1]))
@@ -53,7 +52,7 @@ class dump(object):
 
 	def __getData(self,data):
 		for key in data:
-			d = re.search('\\r\\n(?P<value>[^\s]+)',self.__sendCmd('get '+key[0]+'\n')).groupdict()
+			d = re.search('\\r\\n(?P<value>[^\\s]+)',self.__sendCmd('get '+key[0]+'\n')).groupdict()
 			yield key[0],key[1],d['value']
 			
 	
